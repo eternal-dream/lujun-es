@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqvip.innocence.project.mapper.ArmResourceMapper">
+    <select id="getRoleResources" parameterType="com.cqvip.innocence.project.model.entity.ArmRole"
+            resultType="com.cqvip.innocence.project.model.entity.ArmResource">
+        SELECT
+        RE.ID id,RE.MENU_URL menuUrl,RE.COMPONENT component,RE.IS_FRAME isFrame,RE.NAME as name,re.permission permission,
+        RE.SORT sort,RE.PARENT_ID parentId,RE.MENU_ICON menuIcon,RE.IS_CACHE isCache,RE.MENU_TYPE menuType,RE.IS_HIDDEN
+        FROM ARMYINFANTRY.ARM_ROLE_RESOURCE RR
+        LEFT JOIN ARMYINFANTRY.ARM_RESOURCE RE ON RE.ID = RR.RESOURCE_ID
+        WHERE RR.ROLE_ID = #{id,jdbcType=BIGINT} AND RE.DELETED = 0
+        ORDER BY sort
+    </select>
+
+    <select id="getSuperResources" resultType="com.cqvip.innocence.project.model.dto.ResourceNode">
+       SELECT
+        ar.ID id,
+        ar.name,
+        ar.MENU_URL menuUrl,
+        ar.PERMISSION permission,
+        ar.SORT sort,
+        ar.MENU_ICON menuIcon,
+        ar.PARENT_ID parentId,
+        ar.MENU_TYPE menuType,
+        ar.COMPONENT component,
+        ar.IS_CACHE isCache,
+        ar.IS_HIDDEN isHidden
+        FROM
+        ARMYINFANTRY.ARM_RESOURCE ar
+        WHERE
+        PARENT_ID IS NULL AND DELETED = 0 ORDER BY ar.SORT
+    </select>
+
+    <select id="getNotSuperResources" resultType="com.cqvip.innocence.project.model.dto.ResourceNode">
+        SELECT
+        ar.ID id,
+        ar.name,
+        ar.MENU_URL menuUrl,
+        ar.PERMISSION permission,
+        ar.SORT sort,
+        ar.MENU_ICON menuIcon,
+        ar.PARENT_ID parentId,
+        ar.MENU_TYPE menuType,
+        ar.COMPONENT component,
+        ar.IS_CACHE isCache,
+        ar.IS_HIDDEN isHidden
+        FROM
+        ARMYINFANTRY.ARM_RESOURCE ar
+        WHERE
+        PARENT_ID IS NOT NULL  AND DELETED = 0 ORDER BY ar.SORT
+    </select>
+</mapper>

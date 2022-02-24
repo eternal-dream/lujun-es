@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqvip.innocence.project.mapper.ArmNewJournalArticleMapper">
+
+    <select id="getPageList" resultType="com.cqvip.innocence.project.model.entity.ArmNewJournalArticle">
+        SELECT
+        AJ.ID id,
+        AJ.CREATE_TIME createTime,
+        AJ.MODIFY_TIME modifyTime,
+        AJ.TITLE title,
+        AJ.JOURNAL_ID journalId,
+        AJ.IMG_URL imgUrl,
+        AJ.CONTENT content,
+        AJ.SORT_ID sortId,
+        AJ.VISIT_COUNT visitCount,
+        AJ.DOWN_COUNT downCount,
+        AJ.USER_ID userId,
+        AU.REAL_NAME userName
+        FROM ARMYINFANTRY.ARM_NEW_JOURNAL_ARTICLE AS AJ
+        JOIN ARMYINFANTRY.ARM_ADMIN_USER AS AU ON AJ.USER_ID = AU.ID
+        <where>
+            AJ.JOURNAL_ID = #{id,jdbcType=BIGINT}
+            AND AJ.DELETED = 0
+            <if test="title != null and title != ''">
+            AND AJ.TITLE LIKE CONCAT('%',#{title,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+        ORDER BY AJ.SORT_ID,AJ.MODIFY_TIME DESC
+    </select>
+
+    <select id="getDetailById" resultType="com.cqvip.innocence.project.model.entity.ArmNewJournalArticle">
+        SELECT
+        AJ.ID id,
+        AJ.CREATE_TIME createTime,
+        AJ.MODIFY_TIME modifyTime,
+        AJ.TITLE title,
+        AJ.JOURNAL_ID journalId,
+        AJ.IMG_URL imgUrl,
+        AJ.CONTENT content,
+        AJ.SORT_ID sortId,
+        AJ.VISIT_COUNT visitCount,
+        AJ.DOWN_COUNT downCount,
+        AJ.USER_ID userId,
+        AU.REAL_NAME userName
+        FROM ARMYINFANTRY.ARM_NEW_JOURNAL_ARTICLE AS AJ
+        JOIN ARMYINFANTRY.ARM_ADMIN_USER AS AU ON AJ.USER_ID = AU.ID
+        WHERE AJ.ID = #{id,jdbcType=BIGINT} AND AJ.DELETED = 0
+    </select>
+
+    <select id="getNewJournalArticles" resultType="java.util.Map">
+        SELECT t1.id,t1.TITLE,t3.REAL_NAME realName,t2.TITLE type,t1.VISIT_COUNT visitCount,t1.CREATE_TIME createTime
+        from ARMYINFANTRY.ARM_NEW_JOURNAL_ARTICLE t1 left join ARMYINFANTRY.ARM_NEW_JOURNAL t2
+        ON t2.id = t1.JOURNAL_ID
+        LEFT JOIN ARMYINFANTRY.ARM_ADMIN_USER t3 ON t3.id = t1.USER_ID
+        WHERE t1.DELETED = 0
+        ORDER BY t1.CREATE_TIME DESC
+        LIMIT ((#{page.current}-1)*#{page.size}),#{page.size}
+    </select>
+</mapper>

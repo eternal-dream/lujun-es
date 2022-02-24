@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqvip.innocence.project.mapper.ArmNewsMapper">
+    <!--<select id="getNewsByPage" resultType="map">-->
+    <select id="getNewsByPage" resultType="com.cqvip.innocence.project.model.entity.ArmNews">
+        SELECT
+        AN.ID id,
+        AN."CREATE_TIME" createTime,
+        AN."COLUMN_ID" columnId,
+        AN."TITLE" title,
+        AN."PUBLISH_CONTENT" publishContent,
+        AN."LINK_ADDRESS" linkAddress,
+        AN."IMG_URL" imgUrl,
+        AN."AUDIT_STATUS" auditStatus,
+        AN."NUMERICAL_ORDER" "numericalOrder",
+        AN."CLASS_ID" classId,
+        AN."DOWN_COUNT" downCount,
+        AN."VISIT_COUNT" visitCount,
+        AN."PRODUCER" producer,
+        AN."SPEAKER" speaker,
+        AN."THEME_NAME" themeName,
+        AN."VIDEO_SRC" videoSrc,
+        AAU.REAL_NAME publishAuthorName,
+        ANC.NAME columnName
+        FROM
+        ARMYINFANTRY.ARM_NEWS AN
+        JOIN ARMYINFANTRY.ARM_ADMIN_USER AAU ON
+        AN.PUBLISH_AUTHOR = AAU.ID
+        LEFT JOIN ARMYINFANTRY.ARM_NEWS_COLUMN ANC ON ANC.id = AN.COLUMN_ID
+        where
+            AN.DELETED = 0
+            <if test="armNews.title != null and armNews.title!=''">
+                AND AN.TITLE like concat('%',#{armNews.title},'%')
+            </if>
+             <if test="armNews.columnId != null and armNews.columnId!=''">
+                AND AN.COLUMN_ID = #{armNews.columnId}
+            </if>
+            <if test="armNews.auditStatus != null">
+                AND AN.AUDIT_STATUS = #{armNews.auditStatus}
+            </if>
+            <if test="armNews.publishAuthorName != null and armNews.publishAuthorName!=''">
+                AND AAU.REAL_NAME = #{armNews.publishAuthorName}
+            </if>
+            <if test="armNews.classId!=null">
+                AND AN.CLASS_ID = #{armNews.classId}
+            </if>
+            <if test="beginTime != null">
+                AND AN.CREATE_TIME <![CDATA[ >= ]]> #{beginTime}
+            </if>
+            <if test="endTime != null">
+                AND AN.CREATE_TIME <![CDATA[ <= ]]> #{endTime}
+            </if>
+
+        <!--<if test="page.size !=null and page.current!=null">
+            limit #{page.current},#{page.size}
+        </if>-->
+
+        <if test="order == 'createTime' or order == ''">
+            order by AN.create_time desc
+        </if>
+
+        <if test="order == 'hot'">
+            order by AN.VISIT_COUNT,AN.DOWN_COUNT desc
+        </if>
+
+        <if test="order == 'synthetical'">
+            order by AN.VISIT_COUNT,AN.DOWN_COUNT,AN.create_time desc
+        </if>
+    </select>
+
+    <delete id="deleteByIdWithXml" parameterType="java.io.Serializable">
+        DELETE FROM ARMYINFANTRY.ARM_NEWS AS AN WHERE AN.ID = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <update id="restore" parameterType="java.io.Serializable">
+        UPDATE ARMYINFANTRY.ARM_NEWS SET DELETED = 0 WHERE ID = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="getNewsListToIndex" resultType="java.util.Map">
+        SELECT
+        AN.ID id,AN.TITLE newsTitle,AN.CREATE_TIME createTime,ANC.TITLE type
+        FROM ARMYINFANTRY.ARM_NEWS AS AN
+        JOIN ARMYINFANTRY.ARM_NEWS_CLASS AS ANC ON AN.CLASS_ID = ANC.ID
+        WHERE ANC.COLUMN_ID = (SELECT ID FROM ARMYINFANTRY.ARM_NEWS_COLUMN WHERE NAME='新闻公告')
+        AND AN.DELETED = 0 AND AN.AUDIT_STATUS = 'SHOW'
+        LIMIT 0,7
+    </select>
+
+    <select id="getNewsPageList" resultType="com.cqvip.innocence.project.model.entity.ArmNews">
+        SELECT
+        AN.ID id,
+        AN.CREATE_TIME createTime,
+        AN.MODIFY_TIME modifyTime,
+        AN.COLUMN_ID columnId,
+        AN.TITLE title,
+        AN.PUBLISH_AUTHOR publishAuthor,
+        AN.PUBLISH_CONTENT publishContent,
+        AN.IMG_URL imgUrl,
+        AN.AUDIT_STATUS auditStatus,
+        AN.NUMERICAL_ORDER numericalOrder,
+        AN.CLASS_ID classId,
+        AN.VISIT_COUNT visitCount,
+        AN.THEME_NAME themeName,
+        AN.VIDEO_SRC videoSRC
+        FROM ARMYINFANTRY.ARM_NEWS AS AN
+        JOIN ARMYINFANTRY.ARM_NEWS_CLASS AS ANC ON AN.CLASS_ID = ANC.ID
+        WHERE ANC.COLUMN_ID = (SELECT ID FROM ARMYINFANTRY.ARM_NEWS_COLUMN WHERE NAME='新闻公告')
+        AND AN.DELETED = 0
+    </select>
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqvip.innocence.project.mapper.DbInfoUpdateLogMapper">
+
+    <select id="getPageList" resultType="com.cqvip.innocence.project.model.entity.DbInfoUpdateLog"
+            parameterType="java.lang.Long">
+        SELECT
+            DIUL.ID id,
+            DIUL.CREATE_TIME createTime,
+            DIUL.MODIFY_TIME modifyTime,
+            DIUL.USER_ID userId,
+            AAU.REAL_NAME realName,
+            DIUL.CONTENT content,
+            DIUL.UPDATE_COUNT updateCount,
+            DIUL.UPDATE_SIZE updateSize,
+            DIUL.DB_ID dbId
+        FROM ARMYINFANTRY.DB_INFO_UPDATE_LOG AS DIUL
+        JOIN ARMYINFANTRY.ARM_ADMIN_USER AS AAU ON DIUL.USER_ID = AAU.ID
+        WHERE DIUL.DELETED = 0 AND DIUL.DB_ID = #{dbId}
+        ORDER BY DIUL.MODIFY_TIME DESC
+    </select>
+
+    <select id="getLimitList" resultType="com.cqvip.innocence.project.model.entity.DbInfoUpdateLog">
+        SELECT
+        DIUL.ID id,
+        DIUL.CREATE_TIME createTime,
+        DIUL.MODIFY_TIME modifyTime,
+        DIUL.USER_ID userId,
+        DIUL.CONTENT content,
+        DIUL.UPDATE_COUNT updateCount,
+        DIUL.UPDATE_SIZE updateSize,
+        DIUL.DB_ID dbId,
+        DI.TITLE title
+        FROM ARMYINFANTRY.DB_INFO_UPDATE_LOG AS DIUL
+        JOIN ARMYINFANTRY.DB_INFO AS DI ON DIUL.DB_ID = DI.ID
+        WHERE DIUL.DELETED = 0
+        ORDER BY DIUL.MODIFY_TIME DESC
+        LIMIT 0,12
+    </select>
+
+    <select id="getPageListToFront" resultType="com.cqvip.innocence.project.model.entity.DbInfoUpdateLog">
+        SELECT
+        DIUL.ID id,
+        DIUL.CREATE_TIME createTime,
+        DIUL.MODIFY_TIME modifyTime,
+        DIUL.USER_ID userId,
+        DIUL.CONTENT content,
+        DIUL.UPDATE_COUNT updateCount,
+        DIUL.UPDATE_SIZE updateSize,
+        DIUL.DB_ID dbId,
+        DI.TITLE title
+        FROM ARMYINFANTRY.DB_INFO_UPDATE_LOG AS DIUL
+        JOIN ARMYINFANTRY.DB_INFO AS DI ON DIUL.DB_ID = DI.ID
+        WHERE DIUL.DELETED = 0
+        ORDER BY DIUL.MODIFY_TIME DESC
+    </select>
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqvip.innocence.project.mapper.ArmMenuMapper">
+
+
+    <select id="getAllNotSuperMenu" resultType="com.cqvip.innocence.project.model.dto.MenuNode">
+        SELECT
+        AM.id,
+        AM.CREATE_TIME createTime,
+        AM.MODIFY_TIME modifyTime,
+        AM.DELETED deleted,
+        AM.NAME name,
+        AM.URL url,
+        AM."LEVEL" level,
+        AM.PARENT_ID parentId,
+        AM."SORT" sort,
+        AM.FOUNDER_ID founderId,
+        AM.ICON icon,
+        AM.IS_DEFAULT isDefault
+
+        FROM ARMYINFANTRY.ARM_MENU AM
+        WHERE AM.PARENT_ID is not null AND DELETED = 0 ORDER BY AM.SORT
+    </select>
+
+    <select id="getAllSuperMenu" resultType="com.cqvip.innocence.project.model.dto.MenuNode">
+        SELECT
+        AM.id,
+        AM.CREATE_TIME createTime,
+        AM.MODIFY_TIME modifyTime,
+        AM.DELETED deleted,
+        AM.NAME name,
+        AM.URL url,
+        AM."LEVEL" level,
+        AM.PARENT_ID parentId,
+        AM."SORT" sort,
+        AM.FOUNDER_ID founderId,
+        AM.ICON icon,
+        AM.IS_DEFAULT isDefault
+        FROM ARMYINFANTRY.ARM_MENU AM
+        WHERE AM.PARENT_ID is null  AND DELETED = 0 ORDER BY AM.SORT
+    </select>
+
+    <select id="getMenuNodeById" parameterType="java.lang.Long" resultType="com.cqvip.innocence.project.model.dto.MenuNode">
+      SELECT
+        AM.id,
+        AM.CREATE_TIME createTime,
+        AM.MODIFY_TIME modifyTime,
+        AM.DELETED deleted,
+        AM.NAME name,
+        AM.URL url,
+        AM."LEVEL" level,
+        AM.PARENT_ID parentId,
+        AM."SORT" sort,
+        AM.FOUNDER_ID founderId,
+        AM.ICON icon,
+        AM.IS_DEFAULT isDefault
+        FROM ARMYINFANTRY.ARM_MENU AM where id = #{id} AND DELETED = 0
+    </select>
+
+</mapper>

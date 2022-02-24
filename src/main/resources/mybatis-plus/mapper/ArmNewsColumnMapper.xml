@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqvip.innocence.project.mapper.ArmNewsColumnMapper">
+    <select id="getAllNotSuperNewsColumn" resultType="com.cqvip.innocence.project.model.entity.ArmNewsColumn">
+        SELECT
+        ANC.ID id,
+        ANC.name,
+        ANC.STATUS status,
+        ANC.COLUMN_TYPE columnType,
+        ANC.NUMERICAL_ORDER numericalOrder,
+        ANC.PARENT_ID parentId,
+        ANC.IS_DEFAULT isDefault
+        FROM
+        ARMYINFANTRY.ARM_NEWS_COLUMN ANC
+        WHERE
+        PARENT_ID IS NOT NULL  AND DELETED = 0 ORDER BY ANC.NUMERICAL_ORDER
+    </select>
+
+    <select id="getAllSuperNewsColumn" resultType="com.cqvip.innocence.project.model.entity.ArmNewsColumn">
+        SELECT
+        ANC.ID id,
+        ANC.name,
+        ANC.STATUS status,
+        ANC.COLUMN_TYPE columnType,
+        ANC.NUMERICAL_ORDER numericalOrder,
+        ANC.PARENT_ID parentId,
+        ANC.IS_DEFAULT isDefault
+        FROM
+        ARMYINFANTRY.ARM_NEWS_COLUMN ANC
+        WHERE
+        PARENT_ID IS NULL  AND DELETED = 0 ORDER BY ANC.NUMERICAL_ORDER
+    </select>
+</mapper>

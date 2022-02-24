@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqvip.innocence.project.mapper.ArmNewsClassMapper">
+    <select id="getSoftwareClassByColumnName" resultType="com.cqvip.innocence.project.model.entity.ArmNewsClass">
+      SELECT
+        ANC.*
+      FROM
+        ARMYINFANTRY.ARM_NEWS_CLASS ANC
+      JOIN
+        ARMYINFANTRY.ARM_NEWS_COLUMN ANCOLUMN
+      ON
+        ANC.COLUMN_ID = ANCOLUMN.ID
+      AND ANCOLUMN.NAME = #{columnName}
+      AND ANC.DELETED = 0
+    </select>
+</mapper>

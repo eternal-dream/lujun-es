@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqvip.innocence.project.mapper.ArmThematicDatabaseMapper">
+    <select id="getThematicTypesByPage" resultType="com.cqvip.innocence.project.model.entity.ArmThematicDatabase">
+        SELECT
+        ATD.*,
+        aau.REAL_NAME publisher
+        FROM
+        ARMYINFANTRY.ARM_THEMATIC_DATABASE ATD
+        JOIN ARMYINFANTRY.ARM_ADMIN_USER AAU ON
+        ATD.USER_ID = AAU.ID
+        <where>
+            <if test="armThematicDatabase.name != null and armThematicDatabase.name!=''">
+                AND ATD.NAME like concat('%',#{armThematicDatabase.name},'%')
+            </if>
+            <if test="armThematicDatabase.themeStatus != null ">
+                AND ATD.THEME_STATUS =#{armThematicDatabase.themeStatus}
+            </if>
+            AND ATD.DELETED = 0
+        </where>
+        <!--<if test="page.size !=null and page.current!=null">
+            limit #{page.current},#{page.size}
+        </if>-->
+        order by ATD.create_time desc
+    </select>
+</mapper>

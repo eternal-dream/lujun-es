@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqvip.innocence.project.mapper.ArmArticleSearchLogMapper">
+
+    <select id="getRecords" resultType="java.util.Map">
+      select *
+      from ARMYINFANTRY.${tableName}
+      <where>
+          USER_ID = #{id}
+          <if test="startTime != null">
+              AND CREATE_TIME <![CDATA[ > ]]> #{startTime}
+          </if>
+          <if test="endTime != null">
+              AND CREATE_TIME <![CDATA[ < ]]> #{endTime}
+          </if>
+          AND DELETED = 0
+      </where>
+        order by create_time desc
+        LIMIT ((#{current}-1)*#{size}),#{size}
+    </select>
+
+    <select id="getAllTypeRecords" resultType="java.util.Map">
+        select * from (select ID,
+        CREATE_TIME,
+        USER_ID,
+        IP_ADDRESS,
+        OBJ_ID,
+        TITLE,
+        DB_NAME,
+        '浏览' type
+        FROM ARMYINFANTRY.ARM_ARTICLE_VISIT_LOG
+        <where>
+            USER_ID = #{id}
+            <if test="startTime != null">
+                AND CREATE_TIME <![CDATA[ > ]]> #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND CREATE_TIME <![CDATA[ < ]]> #{endTime}
+            </if>
+            AND DELETED = 0
+        </where>
+        UNION ALL
+        select ID,
+        CREATE_TIME,
+        USER_ID,
+        IP_ADDRESS,
+        OBJ_ID,
+        TITLE,
+        DB_NAME,
+        '下载' type
+        FROM ARMYINFANTRY.ARM_ARTICLE_DOWN_LOG
+        <where>
+            USER_ID = #{id}
+            <if test="startTime != null">
+                AND CREATE_TIME <![CDATA[ > ]]> #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND CREATE_TIME <![CDATA[ < ]]> #{endTime}
+            </if>
+            AND DELETED = 0
+        </where>
+        UNION ALL
+        select ID,
+        CREATE_TIME,
+        USER_ID,
+        '' OBJ_ID,
+        IP_ADDRESS,
+        DISPLAY_INFO,
+        '' DB_NAME,
+        '检索' type
+        FROM ARMYINFANTRY.ARM_ARTICLE_SEARCH_LOG
+        <where>
+            USER_ID = #{id}
+            <if test="startTime != null">
+                AND CREATE_TIME <![CDATA[ > ]]> #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND CREATE_TIME <![CDATA[ < ]]> #{endTime}
+            </if>
+            AND DELETED = 0
+        </where>
+        UNION ALL
+        select ID,
+        CREATE_TIME,
+        USER_ID,
+        REAL_ID OBJ_ID,
+        TITLE,
+        '' IP_ADDRESS,
+        DB_NAME,
+        '收藏' type
+        FROM ARMYINFANTRY.ARM_FAVOURITE
+        <where>
+            USER_ID = #{id}
+            <if test="startTime != null">
+                AND CREATE_TIME <![CDATA[ > ]]> #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND CREATE_TIME <![CDATA[ < ]]> #{endTime}
+            </if>
+            AND DELETED = 0
+        </where>) t
+        order by CREATE_TIME desc
+        LIMIT ((#{current}-1)*#{size}),#{size}
+    </select>
+
+    <select id="countRecordsByTableName" resultType="java.lang.Integer">
+        select count(*) from ARMYINFANTRY.${tableName}
+        <where>
+            USER_ID = #{id}
+            <if test="startTime != null">
+                AND CREATE_TIME <![CDATA[ > ]]> #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND CREATE_TIME <![CDATA[ < ]]> #{endTime}
+            </if>
+            AND DELETED = 0
+        </where>
+    </select>
+
+    <select id="countRecords" resultType="java.lang.Integer">
+        select count1+count2+count3+count4 total from
+        (select count(*) count1
+        FROM ARMYINFANTRY.ARM_ARTICLE_VISIT_LOG
+        <where>
+            USER_ID = #{id}
+            <if test="startTime != null">
+                AND CREATE_TIME <![CDATA[ > ]]> #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND CREATE_TIME <![CDATA[ < ]]> #{endTime}
+            </if>
+            AND DELETED = 0
+        </where>
+        )t1,
+        (select count(*) count2
+        FROM ARMYINFANTRY.ARM_ARTICLE_DOWN_LOG
+        <where>
+            USER_ID = #{id}
+            <if test="startTime != null">
+                AND CREATE_TIME <![CDATA[ > ]]> #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND CREATE_TIME <![CDATA[ < ]]> #{endTime}
+            </if>
+            AND DELETED = 0
+        </where>
+        )t2,
+        (select count(*) count3
+        FROM ARMYINFANTRY.ARM_ARTICLE_SEARCH_LOG
+        <where>
+            USER_ID = #{id}
+            <if test="startTime != null">
+                AND CREATE_TIME <![CDATA[ > ]]> #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND CREATE_TIME <![CDATA[ < ]]> #{endTime}
+            </if>
+            AND DELETED = 0
+        </where>
+        )t3,
+        (select count(*) count4
+        FROM ARMYINFANTRY.ARM_FAVOURITE
+        <where>
+            USER_ID = #{id}
+            <if test="startTime != null">
+                AND CREATE_TIME <![CDATA[ > ]]> #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND CREATE_TIME <![CDATA[ < ]]> #{endTime}
+            </if>
+            AND DELETED = 0
+        </where>) t4
+    </select>
+</mapper>

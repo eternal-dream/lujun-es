@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqvip.innocence.project.mapper.ArmQuestionMapper">
+    <resultMap id="baseQuestionMap" type="map">
+        <result property="id" column="ID" jdbcType="BIGINT"/>
+        <result property="createTime" column="CREATE_TIME" jdbcType="DATE"/>
+        <result property="modifyTime" column="MODIFY_TIME" jdbcType="DATE"/>
+        <result property="deleted" column="DELETED" jdbcType="INTEGER"/>
+        <result property="title" column="TITLE" jdbcType="VARCHAR"/>
+        <result property="content" column="CONTENT" jdbcType="VARCHAR" javaType="string"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="realName" column="REAL_NAME" jdbcType="VARCHAR"/>
+        <result property="classname" column="classname" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="baseQuerySql">
+        SELECT
+            aa.REAL_NAME ,
+--             aqc.TITLE className,
+            aq.ID,
+            aq.CLASS_ID,
+            aq.CREATE_TIME,
+            aq.MODIFY_TIME,
+            aq.DELETED,
+            aq.TITLE,
+            aq.CONTENT,
+            aq.ANSWER,
+            aq.TYPE,
+            aa.REAL_NAME userName
+        FROM
+            ARMYINFANTRY.ARM_QUESTION as aq
+        JOIN ARMYINFANTRY.ARM_QUESTION_CLASS as aqc ON aq.CLASS_ID = aqc.id
+        LEFT JOIN ARMYINFANTRY.ARM_ADMIN_USER as aa ON aq.ADMIN_ID = aa.id
+    </sql>
+
+    <select id="getArmQuestionByPage" resultType="com.cqvip.innocence.project.model.entity.ArmQuestion">
+        <include refid="baseQuerySql"/>
+        <where>
+            <if test="armQuestion.title != null and armQuestion.title!=''">
+                AND aq.TITLE like concat('%',#{armQuestion.title},'%')
+            </if>
+            <if test="armQuestion.type !=null ">
+                AND aq.TYPE = #{armQuestion.type}
+            </if>
+            AND aq.DELETED = 0
+        </where>
+        <!--<if test="page.size !=null and page.current!=null">
+            limit #{page.current},#{page.size}
+        </if>-->
+        order by aq.create_time desc
+    </select>
+
+
+
+</mapper>

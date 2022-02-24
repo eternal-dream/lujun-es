@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqvip.innocence.project.mapper.ArmAdminUserRoleMapper">
+
+    <select id="getRoleByAdmin" resultType="com.cqvip.innocence.project.model.entity.ArmAdminUserRole"
+        parameterType="com.cqvip.innocence.project.model.entity.ArmAdminUser">
+        select *
+        from  ARMYINFANTRY.ARM_ROLE as ro
+        left join ARMYINFANTRY.ARM_ADMIN_USER_ROLE as ar on ro.id = ar.role_ID
+        left join ARMYINFANTRY.ARM_ADMIN_USER as ad on ar.ADMIN_USER_ID = ad.ID
+        where ad.id = #{id,jdbcType=BIGINT} and ro.DELETED = 0
+    </select>
+</mapper>

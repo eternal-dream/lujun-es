@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqvip.innocence.project.mapper.ArmOperLogMapper">
+    <select id="getVisitCountOfYear" resultType="java.util.Map">
+        select count(*) count,to_number(to_char(CREATE_TIME,'MM')) date from ARMYINFANTRY.ARM_OPER_LOG
+        where CREATE_TIME <![CDATA[ >= ]]>( select extract(year from sysdate) || '-01-01')
+        AND USER_ID is not null AND DELETED = 0
+        group by to_char(CREATE_TIME,'MM')
+    </select>
+
+    <select id="getVisitCountOfMonth" resultType="java.util.Map">
+        select count(*) count,to_number(to_char(CREATE_TIME,'dd')) date from ARMYINFANTRY.ARM_OPER_LOG
+        where CREATE_TIME <![CDATA[ >= ]]>( select extract(year from sysdate) || '-' || extract(month from sysdate) || '-01')
+        and USER_ID is not null AND DELETED = 0
+        group by to_char(CREATE_TIME,'dd')
+    </select>
+
+    <select id="getVisitCountOfDay" resultType="java.util.Map">
+        select count(*) count,to_number(to_char(CREATE_TIME,'hh24')) date from ARMYINFANTRY.ARM_OPER_LOG
+        where CREATE_TIME <![CDATA[ >= ]]>( select to_char(sysdate,'yyyy-MM-dd') from dual )
+        and USER_ID is not null AND DELETED = 0
+        group by to_char(CREATE_TIME,'hh24')
+    </select>
+
+    <select id="getVisitCountOfWeek" resultType="java.util.Map">
+      select count(*) count,to_number(to_char(CREATE_TIME,'dd')) date from ARMYINFANTRY.ARM_OPER_LOG
+        where CREATE_TIME <![CDATA[ >= ]]> #{monday}
+        and USER_ID is not null AND DELETED = 0
+      group by to_char(CREATE_TIME,'dd')
+    </select>
+
+    <select id="countVisitTimes" resultType="java.lang.Integer">
+        select count(*) from ARMYINFANTRY.ARM_OPER_LOG
+        <where>
+            <if test="limit != null">
+                CREATE_TIME <![CDATA[ >= ]]> #{limit}
+            </if>
+            and USER_ID is not null AND DELETED =0
+        </where>
+    </select>
+</mapper>

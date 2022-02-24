@@ -1,0 +1,129 @@
+#启动端口和根路径
+server:
+  address: 0.0.0.0
+  port: 8086
+  servlet:
+    context-path: /
+
+#数据源配置
+spring:
+  data:
+    mongodb:
+      host: 192.168.30.134
+      port: 27017
+      database: MonArmy
+      username: admin
+      password: '8161991' #mongoDB的密码必须要单引号，否则会有意想不到的问题
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    #    todo postgresql
+    #    driver-class-name: org.postgresql.Driver
+    #    url: jdbc:postgresql://localhost:5432/innocence
+    #    username: postgres
+    #    password: 123456
+    #    todo mysql
+    #    driver-class-name:  com.mysql.cj.jdbc.Driver
+    #    url: jdbc:mysql://localhost:3306/test?allowMultiQueries=true&useAffectedRows=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8
+    #    username: root
+    #    password: 123456
+    #    达梦
+    driver-class-name: dm.jdbc.driver.DmDriver
+    url: jdbc:dm://192.168.20.113:5236/ARMYINFANTRY?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8
+    username: SYSDBA
+    password: dameng123456
+  #    druid:
+  #      #初始化连接大小
+  #      initial-size: 8
+  #      #最小空闲连接数
+  #      min-idle: 5
+  #      #最大连接数
+  #      max-active: 20
+  #      #查询超时时间
+  #      query-timeout: 6000
+  #      #事务查询超时时间
+  #      transaction-query-timeout: 6000
+  #      #关闭空闲连接超时时间
+  #      remove-abandoned-timeout: 1800
+  #      filters: stat,config,wall
+  #shiro的Redis配置
+  redis:
+    shiro:
+      host: 127.0.0.1
+      port: 6379
+      timeout: 0
+  #      password: 123456
+  #全局日期转换
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  #文件上传数据大小限制
+  servlet:
+    multipart:
+      #单个数据最大限制
+      max-file-size: 1024MB
+      #单次请求所有数据最大限度
+      max-request-size: 1024MB
+  #配置静态资源路径
+  resources:
+    static-locations: classpath:static/,file:static/
+  #配合日志的使用
+  application:
+    name: innocence
+#集成es
+elasticsearch:
+  scheme: http
+  host: 192.168.30.134 #虚拟机地址
+  port: 9201,9202,9203
+  connection-request-timeout: 30000
+  socket-timeout: 6000000
+  connect-timeout: 5000000
+#使用springboot自带的sl4j日志记录
+logging:
+  file:
+    name: log/log.log
+#mybatis-plus
+mybatis-plus:
+  #mapper.xml文件位置
+  mapper-locations: classpath:mybatis-plus/mapper/*.xml
+  global-config:
+    #    驼峰下划线转换
+    db-column-underline: true
+    db-config:
+      #主键类型：AUTO：“数据库主键ID自增”，INPUT:“用户输入ID”，ID_WORKER：“全局唯一ID（数字类型），UUID：“全局唯一ID（UUID）”
+      #MySQL建议用自增ID
+      #      id-type: uuid
+      #      id-type: AUTO
+      #数据库类型
+      db-type: postgresql
+      #      db-type: mysql
+      #针对表明的驼峰转下划线命名(默认true)
+      table-underline: true
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+  configuration:
+    # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 是否开启自动驼峰命名规则（camel case）映射，即从经典数据库列名A_COLUMN（下划线命名）到经典Java属性名aColumn（驼峰命名）的
+    # 类似映射,默认为true
+    map-underscore-to-camel-case: true
+    # true：当使用map映射表的属性时，表中数据为null也保留到map中，false数据为null时不映射到map中
+    call-setters-on-nulls: true
+  type-enums-package: com.cqvip.innocence.project.model.enums
+
+#自定义前后端的接口前缀
+base-url:
+  manager: system
+  front: view
+
+# 基础文件路径（基于web路径）
+myFile:
+  base-path:
+  upload-url: upload
+  allow-exts: zip,rar,jpg,png,blob,jpeg,doc,docx,pdf,xls,xlsx,txt,caj,ppt,pptx,ttf,gif,mp4,avi,flv
+  video-type: mp4,avi,flv
+  excel-url: excel
+  temp-path: temp
+
+#打包之后的百度编辑器config.json存放的文件位置（因为jar包的原因，建议把ueditor的config.json放到jar包外面）
+ueditor:
+  path: /static/config/ueditor/config.json

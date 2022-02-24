@@ -1,0 +1,6 @@
+# shiro 过滤链 信息提出来
+# TODO ------------------- 不需过滤的请求 ------------------#
+# shiro 过滤链有先后顺序之分，支持/后跟**通配符,但不支持xxx**的形式
+shiro:
+  excludes: '/**/login,/error,/**/verifyCode,/**/unauth,/**/upload/**,/search/**,/swagger-ui/**,/swagger-resources/**,
+  /v3/api-docs,/webjars/springfox-swagger-ui/**,/sys/ueditor/**,/common/**,/view/**,/front/**'

@@ -1,0 +1,19 @@
+#代码生成器专用配置文件
+#-------------------TODO 公共信息部分开始------------------#
+public:
+  author: Innocence
+  serviceName: '%sService'
+  moduleName: project
+  parent: com.cqvip.innocence
+  entity: model.entity
+  templatePath: /templates/mapper.xml.vm
+#-------------------TODO 公共信息部分结束------------------#
+#postgresql
+postgresql:
+  schemaName: public
+#Kingbase
+kingbase:
+  schemaName: PUBLIC
+#达梦(达梦的模式名就是数据库名)
+dameng:
+  schemaName: ARMYINFANTRY

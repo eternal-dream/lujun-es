@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqvip.innocence.project.mapper.DbInfoMapper">
+
+    <select id="getPageList" resultType="com.cqvip.innocence.project.model.entity.DbInfo" parameterType="com.cqvip.innocence.project.model.entity.DbInfo">
+        SELECT
+            DBI.ID id,
+            DBI.CREATE_TIME createTime,
+            DBI.MODIFY_TIME modifyTime,
+            DBI.TITLE title,
+            DBI.PROVIDER provider,
+            DBI.ARTICLE_TYPE articleType,
+            DBI.URL url,
+            DBI.REMARK remark,
+            DBI.SORT_ID sortId,
+            DBI.SUPPLIER supplier,
+            DBI.CLASS_ID classId,
+            DBIC.TITLE classTitle,
+            DBI.IMG_URL imgUrl,
+            DBI.TYPE_ID typeId,
+            DBI.CONTENT_ID contentId,
+            DBI.SYSTEM_ID systemId,
+            DBI.IS_MALIS isMalis,
+            DBI.IS_SEARCH isSearch
+        FROM ARMYINFANTRY.DB_INFO AS DBI
+        JOIN ARMYINFANTRY.DB_INFO_CLASS AS DBIC ON DBI.CLASS_ID = DBIC.ID
+        <where>
+            DBI.DELETED = 0
+            <if test="info.title != null and info.title != ''">
+                AND DBI.TITLE LIKE CONCAT('%',#{info.title,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="info.classId != null">
+                AND DBI.CLASS_ID = #{info.classId,jdbcType=BIGINT}
+            </if>
+            <if test="info.typeId != null">
+                AND DBI.TYPE_ID = #{info.typeId,jdbcType=BIGINT}
+            </if>
+            <if test="info.contentId != null ">
+                AND DBI.CONTENT_ID = #{info.contentId,jdbcType=BIGINT}
+            </if>
+            <if test="info.systemId != null">
+                AND DBI.SYSTEM_ID = #{info.systemId,jdbcType=BIGINT}
+            </if>
+        </where>
+        ORDER BY DBI.SORT_ID DESC
+    </select>
+</mapper>
